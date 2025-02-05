@@ -1,4 +1,3 @@
-import "./css/style.css"
 import Film from "./components/Film/Films.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import Navebar from "./components/Navebar/Navebar.jsx";
@@ -8,7 +7,7 @@ function App() {
     <>
       <div>
         <Navebar></Navebar>
-        <Film></Film>
+        <Home></Home>
         <Footer></Footer>
       </div>
     </>
