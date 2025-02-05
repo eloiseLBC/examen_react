@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 
 const Home = () => {
   const [dataFilm, setDataFilm] = useState([]);
+  const [dataSerie, setDataSerie] = useState([]);
+  const apiKey = "c8bf288bee8edc7e6ac610fda396d4d4";
 
   useEffect(() => {
-    const apiKey = "c8bf288bee8edc7e6ac610fda396d4d4";
     fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${apiKey}`)
       .then((response) => response.json())
       .then((data) => {
@@ -17,8 +18,23 @@ const Home = () => {
       });
   }, []);
 
-  // Trier les films par vote_average en ordre décroissant et sélectionner les 4 premiers
+    useEffect(() => {
+        fetch(`https://api.themoviedb.org/3/tv/top_rated?api_key=${apiKey}&language=fr-FR&page=1`)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            setDataSerie(data.results || []);
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+    }, []);
+
   const topRatedFilms = dataFilm
+    .sort((a, b) => b.vote_average - a.vote_average)
+    .slice(0, 4);
+
+    const topRatedFTVShow = dataSerie
     .sort((a, b) => b.vote_average - a.vote_average)
     .slice(0, 4);
 
@@ -66,6 +82,24 @@ const Home = () => {
             <button id="popular">Populaires</button>
           </div>
           <div className="grid-tendances" id="populaires"></div>
+          <div>
+            {topRatedFTVShow.length > 0 ? (
+              topRatedFTVShow.map((tvshow, index) => (
+                <div key={index} className="movie">
+                  <a href="#">
+                    <img src={`https://image.tmdb.org/t/p/w500${tvshow.backdrop_path}`} alt={tvshow.title} />
+                    <div className="score">
+                      <p>{tvshow.vote_average}</p>
+                    </div>
+                    <h5>{tvshow.title}</h5>
+                    <p>{tvshow.release_date}</p>
+                  </a>
+                </div>
+              ))
+            ) : (
+              <p>No TV show available</p>
+            )}
+          </div>
         </div>
       </div>
     </>
