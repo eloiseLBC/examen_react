@@ -1,10 +1,13 @@
 import "../Pages/Home.scss"
 import React, { useState, useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+
 
 const Home = () => {
   const [dataFilm, setDataFilm] = useState([]);
   const [dataSerie, setDataSerie] = useState([]);
   const apiKey = "c8bf288bee8edc7e6ac610fda396d4d4";
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${apiKey}`)
@@ -38,6 +41,10 @@ const Home = () => {
     .sort((a, b) => b.vote_average - a.vote_average)
     .slice(0, 4);
 
+    const handleFilmClick = (filmId) => {
+        navigate(`/details/`);
+      };
+
   return (
     <>
       <div className="search-container saveMe">
@@ -56,7 +63,7 @@ const Home = () => {
           <div>
             {topRatedFilms.length > 0 ? (
               topRatedFilms.map((film, index) => (
-                <div key={index} className="movie">
+                <div key={index} className="movie" onClick={() => handleFilmClick(film.id)}>
                   <a href="#">
                     <img src={`https://image.tmdb.org/t/p/w500${film.backdrop_path}`} alt={film.title} />
                     <div className="score">
@@ -85,7 +92,7 @@ const Home = () => {
           <div>
             {topRatedFTVShow.length > 0 ? (
               topRatedFTVShow.map((tvshow, index) => (
-                <div key={index} className="movie">
+                <div key={index} className="movie" onClick={() => handleFilmClick(film.id)}>
                   <a href="#">
                     <img src={`https://image.tmdb.org/t/p/w500${tvshow.backdrop_path}`} alt={tvshow.title} />
                     <div className="score">
